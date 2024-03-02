@@ -10,7 +10,7 @@ const placesList = document.querySelector(".places__list");
 
 // кнопки
 const buttonEditProfile = document.querySelector(".profile__edit-button");
-const buttonOpenProfile = document.querySelector(".profile__add-button");
+const buttonAddCard = document.querySelector(".profile__add-button");
 
 // попап профиль
 const popupEditProfile = document.querySelector(".popup_type_edit");
@@ -22,7 +22,7 @@ const userName = document.querySelector(".profile__title");
 const jobName = document.querySelector(".profile__description");
 
 // попап добавления карточки
-const popupOpenProfile = document.querySelector(".popup_type_new-card");
+const popupAddCard = document.querySelector(".popup_type_new-card");
 const popupAddCardForm = document.forms["new-place"];
 const popupAddCardNameInput = popupAddCardForm.elements["place-name"];
 const popupAddCardLinkInput = popupAddCardForm.elements["link"];
@@ -69,8 +69,8 @@ formElement.addEventListener("submit", handleFormSubmit);
 
 // попап добавления карточки
 
-buttonOpenProfile.addEventListener("click", () => {
-  openModal(popupOpenProfile);
+buttonAddCard.addEventListener("click", () => {
+  openModal(popupAddCard);
 });
 
 // Обработчик «отправки» формы добавления карточки
@@ -83,8 +83,8 @@ function handleCardFormSubmit(evt) {
   const addCard = creatingCard(nameValue, linkValue, deleteCard, likeCard, openPopupImg);
 
   placesList.prepend(addCard);
-  closeModal(popupOpenProfile);
   popupAddCardForm.reset();
+  closeModal(popupAddCard);
 }
 
 //слушатель клика по кнопке сохранения формы добавления карточки
