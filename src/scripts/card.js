@@ -28,5 +28,5 @@ export function deleteCard(evt) {
 
 // Функция лайка
 export function likeCard(evt) {
-  evt.target.classList.add("card__like-button_is-active");
+  evt.target.classList.toggle("card__like-button_is-active");
 }

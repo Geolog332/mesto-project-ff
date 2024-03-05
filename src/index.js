@@ -3,6 +3,18 @@ import { initialCards } from "./scripts/cards.js";
 import { openModal, closeModal } from "./scripts/modal.js";
 import { creatingCard, deleteCard, likeCard } from "./scripts/card.js";
 
+
+
+
+// Замечание про поломку лейаута, блока профайл и блока карточек, понял. 
+// Буду решать. но сейчас направляю работу на проверку без устранения данного косяка
+
+
+
+
+
+
+
 //______________________________________________________________________________
 
 // список карточек
@@ -36,9 +48,9 @@ const cardName = document.querySelector(".popup__caption");
 
 // Вывод карточки на страницу
 
-initialCards.forEach(function (Element) {
+initialCards.forEach(function (element) {
   placesList.append(
-    creatingCard(Element.name, Element.link, deleteCard, likeCard, openPopupImg)
+    creatingCard(element.name, element.link, deleteCard, likeCard, openPopupImg)
   );
 });
 
@@ -53,7 +65,7 @@ buttonEditProfile.addEventListener("click", () => {
 });
 
 // Обработчик «отправки» формы редактирования профиля
-function handleFormSubmit(evt) {
+function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
 
   userName.textContent = nameInput.value;
@@ -63,7 +75,7 @@ function handleFormSubmit(evt) {
 }
 
 //слушатель клика по кнопке сохранения формы редактирования профиля
-formElement.addEventListener("submit", handleFormSubmit);
+formElement.addEventListener("submit", handleEditProfileFormSubmit);
 
 //_________________________________________________________________________________
 
@@ -74,7 +86,7 @@ buttonAddCard.addEventListener("click", () => {
 });
 
 // Обработчик «отправки» формы добавления карточки
-function handleCardFormSubmit(evt) {
+function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
 
   const nameValue = popupAddCardNameInput.value;
@@ -88,7 +100,7 @@ function handleCardFormSubmit(evt) {
 }
 
 //слушатель клика по кнопке сохранения формы добавления карточки
-popupAddCardForm.addEventListener("submit", handleCardFormSubmit);
+popupAddCardForm.addEventListener("submit", handleAddCardFormSubmit);
 
 //_________________________________________________________________________________
 
