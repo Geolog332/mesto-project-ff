@@ -2,18 +2,12 @@ import "./pages/index.css";
 import { initialCards } from "./scripts/cards.js";
 import { openModal, closeModal } from "./scripts/modal.js";
 import { creatingCard, deleteCard, likeCard } from "./scripts/card.js";
+import { arrayEnableValidation, clearValidation, enableValidation } from "./scripts/validation.js";
+
+//______________________________________________________________________________
 
 
-
-
-// Замечание про поломку лейаута, блока профайл и блока карточек, понял. 
-// Буду решать. но сейчас направляю работу на проверку без устранения данного косяка
-
-
-
-
-
-
+enableValidation(arrayEnableValidation);
 
 //______________________________________________________________________________
 
@@ -61,6 +55,7 @@ initialCards.forEach(function (element) {
 buttonEditProfile.addEventListener("click", () => {
   nameInput.value = userName.textContent;
   jobInput.value = jobName.textContent;
+  clearValidation(formElement, arrayEnableValidation);
   openModal(popupEditProfile);
 });
 
@@ -82,6 +77,7 @@ formElement.addEventListener("submit", handleEditProfileFormSubmit);
 // попап добавления карточки
 
 buttonAddCard.addEventListener("click", () => {
+  clearValidation(popupAddCardForm, arrayEnableValidation);
   openModal(popupAddCard);
 });
 
@@ -92,7 +88,13 @@ function handleAddCardFormSubmit(evt) {
   const nameValue = popupAddCardNameInput.value;
   const linkValue = popupAddCardLinkInput.value;
 
-  const addCard = creatingCard(nameValue, linkValue, deleteCard, likeCard, openPopupImg);
+  const addCard = creatingCard(
+    nameValue,
+    linkValue,
+    deleteCard,
+    likeCard,
+    openPopupImg
+  );
 
   placesList.prepend(addCard);
   popupAddCardForm.reset();
@@ -106,10 +108,10 @@ popupAddCardForm.addEventListener("submit", handleAddCardFormSubmit);
 
 // попапа карточка
 
-function openPopupImg (evt) {
+function openPopupImg(evt) {
   popupCardImage.src = evt.target.src;
   popupCardImage.alt = evt.target.alt;
   cardName.textContent = evt.target.alt;
 
   openModal(popupOpenCard);
-};
+}
