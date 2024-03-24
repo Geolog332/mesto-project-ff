@@ -3,6 +3,7 @@ import { initialCards } from "./scripts/cards.js";
 import { openModal, closeModal } from "./scripts/modal.js";
 import { creatingCard, deleteCard, likeCard } from "./scripts/card.js";
 import { arrayEnableValidation, clearValidation, enableValidation } from "./scripts/validation.js";
+import { getInitialCards } from "./scripts/api.js";
 
 //______________________________________________________________________________
 
@@ -42,10 +43,15 @@ const cardName = document.querySelector(".popup__caption");
 
 // Вывод карточки на страницу
 
-initialCards.forEach(function (element) {
-  placesList.append(
-    creatingCard(element.name, element.link, deleteCard, likeCard, openPopupImg)
-  );
+let cards = [];
+getInitialCards().then((data) => {
+  data.forEach(function (element) {
+    console.log(element);
+    placesList.append(
+      creatingCard(element.name, element.link, deleteCard, likeCard, openPopupImg)
+    );
+  });
+  
 });
 
 //_______________________________________________________________________________
