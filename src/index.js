@@ -1,12 +1,21 @@
 import "./pages/index.css";
-import { initialCards } from "./scripts/cards.js";
+// import { initialCards } from "./scripts/cards.js";
 import { openModal, closeModal } from "./scripts/modal.js";
 import { creatingCard, deleteCard, likeCard } from "./scripts/card.js";
-import { arrayEnableValidation, clearValidation, enableValidation } from "./scripts/validation.js";
-import { getInitialCards } from "./scripts/api.js";
+import {
+  arrayEnableValidation,
+  clearValidation,
+  enableValidation,
+} from "./scripts/validation.js";
+import {
+  getInitialCards,
+  getUserInfo,
+  updateUserInfo,
+  postCard,
+  cardDelete,
+} from "./scripts/api.js";
 
 //______________________________________________________________________________
-
 
 enableValidation(arrayEnableValidation);
 
@@ -38,40 +47,68 @@ const popupAddCardLinkInput = popupAddCardForm.elements["link"];
 const popupOpenCard = document.querySelector(".popup_type_image");
 const popupCardImage = document.querySelector(".popup__image");
 const cardName = document.querySelector(".popup__caption");
-
+//___________________________________________________________________________
+let userId= "";
 //____________________________________________________________________________
 
-// Вывод карточки на страницу
+// информация о пользователе
 
-let cards = [];
-getInitialCards().then((data) => {
-  data.forEach(function (element) {
-    console.log(element);
+function showUserInfo(userData) {
+  userName.textContent = userData.name;
+  jobName.textContent = userData.about;
+  userId = user._id;
+}
+
+// Вывод карточeк на страницу
+
+function showCards(cards, deleteCard, likeCard, openPopupImg, userId) {
+  cards.forEach((card) => {
     placesList.append(
-      creatingCard(element.name, element.link, deleteCard, likeCard, openPopupImg)
+      creatingCard(
+        card.name,
+        card.link,
+        deleteCard,
+        likeCard,
+        openPopupImg,
+        userId
+      )
     );
   });
-  
-});
+}
 
-//_______________________________________________________________________________
+// Промис получения информации о пользователе и карточках
 
-// попап редактирования профиля
+Promise.all([getUserInfo(), getInitialCards()])
+  .then(([user, cards]) => {
+    showUserInfo(user);
+    showCards(cards, deleteCard, likeCard, openPopupImg, user._id);
+  })
+  .catch((err) => {
+    console.log("Произошла ошибка при получении данных:", err);
+  });
+
+//_____________________________________________________________________________________
+
+// открытие попап редактирование информации о пользователе
 
 buttonEditProfile.addEventListener("click", () => {
   nameInput.value = userName.textContent;
   jobInput.value = jobName.textContent;
-  clearValidation(formElement, arrayEnableValidation);
   openModal(popupEditProfile);
 });
 
 // Обработчик «отправки» формы редактирования профиля
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
-
-  userName.textContent = nameInput.value;
-  jobName.textContent = jobInput.value;
-
+  const newName = nameInput.value;
+  const newJob = jobInput.value;
+  updateUserInfo(newName, newJob)
+    .then((userData) => {
+      showUserInfo(userData);
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
+    });
   closeModal(popupEditProfile);
 }
 
@@ -80,7 +117,7 @@ formElement.addEventListener("submit", handleEditProfileFormSubmit);
 
 //_________________________________________________________________________________
 
-// попап добавления карточки
+// Открытие попап добавления карточки
 
 buttonAddCard.addEventListener("click", () => {
   clearValidation(popupAddCardForm, arrayEnableValidation);
@@ -88,23 +125,27 @@ buttonAddCard.addEventListener("click", () => {
 });
 
 // Обработчик «отправки» формы добавления карточки
+
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-
   const nameValue = popupAddCardNameInput.value;
   const linkValue = popupAddCardLinkInput.value;
-
-  const addCard = creatingCard(
-    nameValue,
-    linkValue,
-    deleteCard,
-    likeCard,
-    openPopupImg
-  );
-
-  placesList.prepend(addCard);
-  popupAddCardForm.reset();
-  closeModal(popupAddCard);
+  postCard(nameValue, linkValue)
+    .then((card) => {
+      const addCard = creatingCard(
+        card.name,
+        card.link,
+        deleteCard,
+        likeCard,
+        openPopupImg
+      );
+      placesList.prepend(addCard);
+      popupAddCardForm.reset();
+      closeModal(popupAddCard);
+    })
+    .catch((err) => {
+      console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
+    });
 }
 
 //слушатель клика по кнопке сохранения формы добавления карточки
@@ -121,3 +162,7 @@ function openPopupImg(evt) {
 
   openModal(popupOpenCard);
 }
+
+//____________________________________________________________________________________
+
+// Удаление карточки
