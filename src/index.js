@@ -13,6 +13,7 @@ import {
   updateUserInfo,
   postCard,
   cardDelete,
+  updateAvatar
 } from "./scripts/api.js";
 
 //______________________________________________________________________________
@@ -37,6 +38,15 @@ const jobInput = formElement.elements["description"];
 const userName = document.querySelector(".profile__title");
 const jobName = document.querySelector(".profile__description");
 
+// попап аватар
+
+const editAvatarPopup = document.querySelector('.popup_type_edit_avatar');
+const popupEditAvatarForm = document.forms["new-avatar"];
+const popupEditAvatarLinkInput = popupEditAvatarForm.elements["link"];
+
+const profileImg = document.querySelector('.profile__image');
+const profileEditButton = document.querySelector('.profile__image_button');
+
 // попап добавления карточки
 const popupAddCard = document.querySelector(".popup_type_new-card");
 const popupAddCardForm = document.forms["new-place"];
@@ -47,17 +57,8 @@ const popupAddCardLinkInput = popupAddCardForm.elements["link"];
 const popupOpenCard = document.querySelector(".popup_type_image");
 const popupCardImage = document.querySelector(".popup__image");
 const cardName = document.querySelector(".popup__caption");
-//___________________________________________________________________________
-let userId= "";
+
 //____________________________________________________________________________
-
-// информация о пользователе
-
-function showUserInfo(userData) {
-  userName.textContent = userData.name;
-  jobName.textContent = userData.about;
-  userId = user._id;
-}
 
 // Вывод карточeк на страницу
 
@@ -76,6 +77,16 @@ function showCards(cards, deleteCard, likeCard, openPopupImg, userId) {
   });
 }
 
+
+// информация о пользователе
+
+function showUserInfo(userData) {
+  userName.textContent = userData.name;
+  jobName.textContent = userData.about;
+  profileImg.setAttribute('style', `background-image:url(${userData.avatar})`);
+  // // userID = user._id;
+}
+
 // Промис получения информации о пользователе и карточках
 
 Promise.all([getUserInfo(), getInitialCards()])
@@ -89,6 +100,34 @@ Promise.all([getUserInfo(), getInitialCards()])
 
 //_____________________________________________________________________________________
 
+//открытие попапа изменения аватара
+profileEditButton.addEventListener('click', function(){
+  openModal(editAvatarPopup)
+})
+
+//Функция для изменения аватара
+function updateAvatarImg(evt) {
+  evt.preventDefault();
+  popupEditAvatarForm.querySelector('.popup__button').textContent = "Сохранение..."; 
+  updateAvatar(popupEditAvatarLinkInput)
+  .then((res) => {
+    profileImg.setAttribute('style', `background-image:url(${res.avatar})`)
+  })
+  .catch((err) => {
+    console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
+  })
+  .finally(()=> {
+    popupEditAvatarForm.querySelector('.popup__button').textContent = "Сохранить"})
+  closeModal(editAvatarPopup);
+}
+
+
+//слушатель клика по кнопке сохранения формы редактирования профиля
+popupEditAvatarForm.addEventListener("submit", updateAvatarImg);
+
+//_____________________________________________________________________________________
+
+
 // открытие попап редактирование информации о пользователе
 
 buttonEditProfile.addEventListener("click", () => {
@@ -100,6 +139,7 @@ buttonEditProfile.addEventListener("click", () => {
 // Обработчик «отправки» формы редактирования профиля
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
+  formElement.querySelector('.popup__button').textContent = "Сохранение..."; 
   const newName = nameInput.value;
   const newJob = jobInput.value;
   updateUserInfo(newName, newJob)
@@ -108,7 +148,9 @@ function handleEditProfileFormSubmit(evt) {
     })
     .catch((err) => {
       console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
-    });
+    })
+    .finally(()=> {
+      formElement.querySelector('.popup__button').textContent = "Сохранить"})
   closeModal(popupEditProfile);
 }
 
@@ -128,6 +170,7 @@ buttonAddCard.addEventListener("click", () => {
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
+  popupAddCardForm.querySelector('.popup__button').textContent = "Сохранение..."; 
   const nameValue = popupAddCardNameInput.value;
   const linkValue = popupAddCardLinkInput.value;
   postCard(nameValue, linkValue)
@@ -145,7 +188,9 @@ function handleAddCardFormSubmit(evt) {
     })
     .catch((err) => {
       console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
-    });
+    })
+    .finally(()=> {
+      popupAddCardForm.querySelector('.popup__button').textContent = "Сохранить"})
 }
 
 //слушатель клика по кнопке сохранения формы добавления карточки
