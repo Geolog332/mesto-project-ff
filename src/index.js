@@ -68,6 +68,7 @@ function showUserInfo(userData) {
   jobName.textContent = userData.about;
   profileImg.setAttribute("style", `background-image:url(${userData.avatar})`);
   userId = userData._id;
+  console.log(userId);
 }
 
 // Вывод карточeк на страницу
@@ -89,7 +90,7 @@ Promise.all([getUserInfo(), getInitialCards()])
   .then(([user, cards]) => {
     showUserInfo(user);
     cards.forEach((card) => {
-      showCards(card, deleteCard, likeCard, openPopupImg, userId._id);
+      showCards(card, deleteCard, likeCard, openPopupImg, userId);
     });
   })
   .catch((err) => {
