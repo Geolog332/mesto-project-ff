@@ -116,8 +116,8 @@
                 id="link"
                 class="popup__input popup__input_type_url"
                 placeholder="Ссылка на картинку"
+                data-error="Разрешены только ссылки на изображения"
                 required
-                pattern="|(http://[a-zA-Z0-9_\./]+)|"
               />
               <span id="link-error" class="link-error popup__input_text_error"
                 >Введите адрес сайта.</span
@@ -149,8 +149,8 @@
               id="link" 
               class="popup__input popup__input_type_url" 
               placeholder="Ссылка на картинку" 
-              required  
-              pattern="|(http://[a-zA-Z0-9_\./]+)|">
+              data-error="Разрешены только ссылки на изображения"
+              required  />
               <span id="link-error" class="link-error popup__input_text_error"></span>
             </label>
             <button type="submit" class="button popup__button">Сохранить</button>
