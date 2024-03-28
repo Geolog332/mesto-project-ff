@@ -7,8 +7,7 @@ const closeEsc = (evt) => {
 
 const closeOverlay = (evt) => {
   if (evt.currentTarget === evt.target) {
-    const openedPopup = document.querySelector(".popup_is-opened");
-    closeModal(openedPopup);
+    closeModal(evt.target);
   }
 };
 
@@ -29,6 +28,6 @@ export const openModal = (popup) => {
 export const closeModal = (popup) => {
   popup.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closeEsc);
-  popup.addEventListener("click", closeOverlay);
+  popup.removeEventListener('click', closeOverlay);
   document.removeEventListener("click", closeCross);
 };

@@ -68,7 +68,6 @@ function showUserInfo(userData) {
   jobName.textContent = userData.about;
   profileImg.setAttribute("style", `background-image:url(${userData.avatar})`);
   userId = userData._id;
-  console.log(userId);
 }
 
 // Вывод карточeк на страницу
@@ -107,20 +106,20 @@ profileEditButton.addEventListener("click", function () {
 //Функция для изменения аватара
 function updateAvatarImg(evt) {
   evt.preventDefault();
-  popupEditAvatarForm.querySelector(".popup__button").textContent =
+  evt.submitter.textContent =
     "Сохранение...";
   updateAvatar(popupEditAvatarLinkInput)
     .then((res) => {
       profileImg.setAttribute("style", `background-image:url(${res.avatar})`);
     })
+    closeModal(editAvatarPopup)
     .catch((err) => {
       console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
     })
     .finally(() => {
-      popupEditAvatarForm.querySelector(".popup__button").textContent =
+      evt.submitter.textContent =
         "Сохранить";
     });
-  closeModal(editAvatarPopup);
 }
 
 //слушатель клика по кнопке сохранения формы редактирования профиля
@@ -145,6 +144,7 @@ function handleEditProfileFormSubmit(evt) {
   updateUserInfo(newName, newJob)
     .then((userData) => {
       showUserInfo(userData);
+      closeModal(popupEditProfile);
     })
     .catch((err) => {
       console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
@@ -152,7 +152,6 @@ function handleEditProfileFormSubmit(evt) {
     .finally(() => {
       formElement.querySelector(".popup__button").textContent = "Сохранить";
     });
-  closeModal(popupEditProfile);
 }
 
 //слушатель клика по кнопке сохранения формы редактирования профиля
