@@ -112,7 +112,6 @@ function updateAvatarImg(evt) {
     .then((res) => {
       profileImg.setAttribute("style", `background-image:url(${res.avatar})`);
     })
-    closeModal(editAvatarPopup)
     .catch((err) => {
       console.log(`Произошла ошибка при отправке информации на сервер: ${err}`);
     })
@@ -120,6 +119,7 @@ function updateAvatarImg(evt) {
       evt.submitter.textContent =
         "Сохранить";
     });
+    closeModal(editAvatarPopup)
 }
 
 //слушатель клика по кнопке сохранения формы редактирования профиля
